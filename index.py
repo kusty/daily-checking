@@ -9,10 +9,11 @@ headers = {
     'Cache-Control': "no-cache",
 }
 
-# 获取mysess
-
 
 def get_mysess():
+    """
+    获取mysess
+    """
     url = config.api_url + "get/hy_login_for_app"
     querystring = {
         "account": config.accout,
@@ -24,10 +25,11 @@ def get_mysess():
         "GET", url, headers=headers, params=querystring)
     return ujson.loads(response.text).get("body", {}).get("mysess")
 
-# 获取最后一条打卡记录
-
 
 def get_last_checking():
+    """
+    获取最后一条打卡记录
+    """
     url = config.api_url + "get/vg_user_get_att_log"
     querystring = {
         "mysess": mysess,
@@ -37,42 +39,45 @@ def get_last_checking():
     checking_list = ujson.loads(response.text).get("body", {}).get("list", [])
     return checking_list[0].get("r_stamp")
 
-# 判断是否是今天
-
 
 def is_today(timestamp):
+    """
+    判断是否是今天
+    """
     cur_time = time.time() * 1000
     cur_zero_time = cur_time - (cur_time % 86400000)
     f_zero_time = cur_zero_time + 86400000
     return (timestamp > cur_zero_time) and (timestamp < f_zero_time)
 
 
-# 判断是否已经打卡
-
-
 def is_checkin():
-
+    """
+    判断是否已经打卡
+    """
     workday = is_workday(
         (datetime.datetime.fromtimestamp(time.time())))
     if not workday:
-        print('不需要打卡')
+        print(u'不需要打卡')
         return
     last_checking = get_last_checking()
     last_checking_hour = time.localtime(last_checking / 1000).tm_hour
     now_hour = datetime.datetime.now().hour
     today = is_today(last_checking)
     if not today:
-        print('上班没打卡，需要打卡')
+        print(u'上班没打卡，需要打卡')
         chekin()
         return
     if now_hour > 20 and last_checking_hour < 18:
-        print('下班没打卡，需要打卡')
+        print(u'下班没打卡，需要打卡')
         chekin()
     else:
-        print("打过卡了")
+        print(u"打过卡了")
 
 
 def chekin():
+    """
+    打卡
+    """
     url = config.api_url + "post/vg_user_att_umpire"
     headers = {
         "user-agent": "wehomec 2.0.27 (iPhone; iOS 11.2.1; Scale 3.00)"}
@@ -90,9 +95,9 @@ def chekin():
     response = requests.post(url, headers=headers, data=payload)
     status = ujson.loads(response.text).get("status")
     if status == 200:
-        print('打卡成功')
+        print(u'打卡成功')
     else:
-        print('打卡失败')
+        print(u'打卡失败')
 
 
 mysess = get_mysess()
