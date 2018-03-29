@@ -70,7 +70,6 @@ def is_checkin():
         chekin()
     else:
         print("打过卡了")
-        chekin()
 
 
 def chekin():
