@@ -10,7 +10,6 @@ headers = {
 }
 
 # 获取mysess
-mysess = ''
 
 
 def get_mysess():
@@ -29,7 +28,6 @@ def get_mysess():
 
 
 def get_last_checking():
-    mysess = get_mysess()
     url = config.api_url + "get/vg_user_get_att_log"
     querystring = {
         "mysess": mysess,
@@ -72,6 +70,7 @@ def is_checkin():
         chekin()
     else:
         print("打过卡了")
+        chekin()
 
 
 def chekin():
@@ -90,11 +89,14 @@ def chekin():
     }
 
     response = requests.post(url, headers=headers, data=payload)
-    status = ujson.loads(response.text).get("body", {}).get("status")
+    status = ujson.loads(response.text).get("status")
     if status == 200:
         print('打卡成功')
     else:
         print('打卡失败')
 
 
-is_checkin()
+mysess = get_mysess()
+
+if __name__ == '__main__':
+    is_checkin()
