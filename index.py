@@ -5,11 +5,18 @@ import ujson
 import config
 import time
 import datetime
+import sys
+import os
+import codecs
+import random
 from chinese_calendar import is_workday
 
 headers = {
     'Cache-Control': "no-cache",
 }
+if sys.stdout.encoding is None:
+    enc = os.environ['LANG'].split('.')[1]
+    sys.stdout = codecs.getwriter(enc)(sys.stdout)
 
 
 def get_mysess():
@@ -93,7 +100,7 @@ def chekin():
         "lon": "121.420368",
         "lat": "31.215915",
     }
-
+    time.sleep(random.randint(1200,3000))
     response = requests.post(url, headers=headers, data=payload)
     status = ujson.loads(response.text).get("status")
     if status == 200:
