@@ -100,7 +100,7 @@ def chekin():
         "lon": "121.420368",
         "lat": "31.215915",
     }
-    time.sleep(random.randint(1200,3000))
+    time.sleep(random.randint(300,1200))
     response = requests.post(url, headers=headers, data=payload)
     status = ujson.loads(response.text).get("status")
     if status == 200:
