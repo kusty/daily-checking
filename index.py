@@ -76,7 +76,7 @@ def is_checkin():
         print(u'上班没打卡，需要打卡')
         chekin()
         return
-    if now_hour > 20 and last_checking_hour < 18:
+    if now_hour > 19 and last_checking_hour < 18:
         print(u'下班没打卡，需要打卡')
         chekin()
     else:
